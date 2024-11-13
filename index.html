@@ -121,17 +121,14 @@
 
       graphicsLayer.add(polylineGraphic);
 
-      // Define a pop-up for usaeduLayer
-      const popupEduusa = {
-        title: "EDUs",
-        content: "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br>"
-      };
-
       // Add the FeatureLayer for universities
       const usaeduLayer = new FeatureLayer({
         url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer", // URL from AGOL Item Page
         outFields: ["NAME", "TOT_ENROLL"],
-        popupTemplate: popupEduusa
+        popupTemplate: {
+          title: "EDUs",
+          content: "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br>"
+        }
       });
       map.add(usaeduLayer);
 
