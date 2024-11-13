@@ -20,7 +20,7 @@
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurGOndvn56RaIuEG-ymH-92haus5XOWjwfQcNHTRTeMO7efrrwIO_P1WvjAaKi6OQjJ3GIY_futaMIJKN2YL-EYHTHG9Rv2I800yOHi-R0CETmNtIv1jHJiXDbTrmTiJeXLEP-6WMH6Zj1mNwmZT3z5l5nB_2nXXSVTEuDcqBFo737s7VpsbqFXNy4GrGXkfT9juBGmdeoQdWJ8oZqkquRShfozv5LIG5tRroi4bCPx5GAT1_IuAFCiIJ";
       
       const map = new Map({
-        basemap: "arcgis-topographic" // Basemap layer
+        basemap: "arcgis-imagery" // Basemap layer
       });
 
       const view = new MapView({
@@ -41,7 +41,7 @@
 
       const simpleMarkerSymbol = {
         type: "simple-marker",
-        style: "square",
+        style: "square", // Change style to square
         color: [0, 0, 139], // Color of blues rock
         outline: {
           color: [255, 255, 255], // White
@@ -50,23 +50,73 @@
       };
 
       const popupTemplate = {
-    title: "{Name}",
-    content: "{Description}"
- }
- const attributes = {
-    Name: "Stevie Ray Vaughan Statue",
-    Description: "A bronze sculpture of Stevie Ray Vaughan by Ralph Helmick"
- }
+        title: "{Name}",
+        content: "{Description}"
+      };
+
+      const attributes = {
+        Name: "Stevie Ray Vaughan Statue",
+        Description: "A bronze sculpture of Stevie Ray Vaughan by Ralph Helmick"
+      };
 
       const pointGraphic = new Graphic({
         geometry: point,
         symbol: simpleMarkerSymbol,
         attributes: attributes,
-popupTemplate: popupTemplate
+        popupTemplate: popupTemplate
       });
 
-    
       graphicsLayer.add(pointGraphic);
+
+      // Create a polygon
+      const polygon = {
+        type: "polygon",
+        rings: [
+          [-97.747, 30.265],
+          [-97.747, 30.269],
+          [-97.743, 30.269],
+          [-97.743, 30.265],
+          [-97.747, 30.265]
+        ]
+      };
+
+      const simpleFillSymbol = {
+        type: "simple-fill",
+        color: [227, 139, 79, 0.8], // Orange, opacity 80%
+        outline: {
+          color: [255, 255, 255],
+          width: 1
+        }
+      };
+
+      const polygonGraphic = new Graphic({
+        geometry: polygon,
+        symbol: simpleFillSymbol
+      });
+
+      graphicsLayer.add(polygonGraphic);
+
+      // Create a polyline
+      const polyline = {
+        type: "polyline",
+        paths: [
+        [-97.751, 30.264],
+        [-97.749, 30.266],
+        ]
+      };
+
+      const simpleLineSymbol = {
+        type: "simple-line",
+        color: [226, 119, 40], // Orange
+        width: 2
+      };
+
+      const polylineGraphic = new Graphic({
+        geometry: polyline,
+        symbol: simpleLineSymbol
+      });
+
+      graphicsLayer.add(polylineGraphic);
     });
   </script>
   <!-- css to make a full screen map -->
