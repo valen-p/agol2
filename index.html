@@ -135,6 +135,20 @@
       });
       map.add(osmEduLayer);
 
+      // Define a pop-up for airports
+      const popupAirports = {
+        title: "Airport",
+        content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>State:</b> {STATE}<br><b>Website:</b> <a href='{URL}' target='_blank'>Visit Website</a>"
+      };
+
+      // Add the FeatureLayer for US Airports
+      const airportsLayer = new FeatureLayer({
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports9/FeatureServer", // URL from AGOL Item Page
+        outFields: ["NAME", "CITY", "STATE", "URL"],
+        popupTemplate: popupAirports
+      });
+      map.add(airportsLayer);
+
       // Query the FeatureLayer to get educational facility features
       osmEduLayer.when(() => {
         const query = osmEduLayer.createQuery();
