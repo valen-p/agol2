@@ -121,58 +121,21 @@
 
       graphicsLayer.add(polylineGraphic);
 
-      // Add the FeatureLayer for universities
-      const usaeduLayer = new FeatureLayer({
-        url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer", // URL from AGOL Item Page
-        outFields: ["NAME", "TOT_ENROLL"],
-        popupTemplate: {
-          title: "EDUs",
-          content: "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br>"
-        }
-      });
-      map.add(usaeduLayer);
+      // Define a pop-up for osmEduLayer
+      const popupEdu = {
+        title: "Educational Facility",
+        content: "<b>Name:</b> {name}<br><b>Type:</b> {type}<br>"
+      };
 
-      // Add the new FeatureLayer for OSM NA Educational
+      // Add the FeatureLayer for OSM NA Educational
       const osmEduLayer = new FeatureLayer({
         url: "https://services6.arcgis.com/Do88DoK2xjTUCXd1/arcgis/rest/services/OSM_NA_Educational/FeatureServer", // URL from AGOL Item Page
         outFields: ["name", "type"],
-        popupTemplate: {
-          title: "Educational Facility",
-          content: "<b>Name:</b> {name}<br><b>Type:</b> {type}<br>"
-        }
+        popupTemplate: popupEdu
       });
       map.add(osmEduLayer);
 
-      // Query the FeatureLayer to get university features
-      usaeduLayer.when(() => {
-        const query = usaeduLayer.createQuery();
-        query.returnGeometry = true;
-        query.outFields = ["NAME", "TOT_ENROLL"];
-        
-        usaeduLayer.queryFeatures(query).then((result) => {
-          result.features.forEach((feature) => {
-            const polygon = {
-              type: "polygon",
-              rings: feature.geometry.rings
-            };
-
-            const polygonGraphic = new Graphic({
-              geometry: polygon,
-              symbol: simpleFillSymbol,
-              attributes: feature.attributes,
-              popupTemplate: usaeduLayer.popupTemplate
-            });
-
-            graphicsLayer.add(polygonGraphic);
-          });
-        }).catch((error) => {
-          console.error("Error querying features: ", error);
-        });
-      }).catch((error) => {
-        console.error("Error loading FeatureLayer: ", error);
-      });
-
-      // Query the new FeatureLayer to get educational facility features
+      // Query the FeatureLayer to get educational facility features
       osmEduLayer.when(() => {
         const query = osmEduLayer.createQuery();
         query.returnGeometry = true;
