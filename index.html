@@ -180,20 +180,19 @@
         
         osmEduLayer.queryFeatures(query).then((result) => {
           result.features.forEach((feature) => {
-            const point = {
-              type: "point",
-              longitude: feature.geometry.longitude,
-              latitude: feature.geometry.latitude
+            const polygon = {
+              type: "polygon",
+              rings: feature.geometry.rings
             };
 
-            const pointGraphic = new Graphic({
-              geometry: point,
-              symbol: simpleMarkerSymbol,
+            const polygonGraphic = new Graphic({
+              geometry: polygon,
+              symbol: simpleFillSymbol,
               attributes: feature.attributes,
               popupTemplate: osmEduLayer.popupTemplate
             });
 
-            graphicsLayer.add(pointGraphic);
+            graphicsLayer.add(polygonGraphic);
           });
         }).catch((error) => {
           console.error("Error querying features: ", error);
