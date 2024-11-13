@@ -141,11 +141,24 @@
         content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>State:</b> {STATE}<br><b>Website:</b> <a href='{URL}' target='_blank'>Visit Website</a>"
       };
 
-      // Add the FeatureLayer for US Airports
+      // Add the FeatureLayer for US Airports with symbols
       const airportsLayer = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports9/FeatureServer", // URL from AGOL Item Page
         outFields: ["NAME", "CITY", "STATE", "URL"],
-        popupTemplate: popupAirports
+        popupTemplate: popupAirports,
+        renderer: {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            style: "circle",
+            color: "blue",
+            size: "8px", // pixels
+            outline: { // autocasts as new SimpleLineSymbol()
+              color: [255, 255, 255],
+              width: 1 // points
+            }
+          }
+        }
       });
       map.add(airportsLayer);
 
@@ -167,35 +180,6 @@
               symbol: simpleFillSymbol,
               attributes: feature.attributes,
               popupTemplate: osmEduLayer.popupTemplate
-            });
-
-            graphicsLayer.add(polygonGraphic);
-          });
-        }).catch((error) => {
-          console.error("Error querying features: ", error);
-        });
-      }).catch((error) => {
-        console.error("Error loading FeatureLayer: ", error);
-      });
-
-      // Query the FeatureLayer to get airport features
-      airportsLayer.when(() => {
-        const query = airportsLayer.createQuery();
-        query.returnGeometry = true;
-        query.outFields = ["NAME", "CITY", "STATE", "URL"];
-        
-        airportsLayer.queryFeatures(query).then((result) => {
-          result.features.forEach((feature) => {
-            const polygon = {
-              type: "polygon",
-              rings: feature.geometry.rings
-            };
-
-            const polygonGraphic = new Graphic({
-              geometry: polygon,
-              symbol: simpleFillSymbol,
-              attributes: feature.attributes,
-              popupTemplate: airportsLayer.popupTemplate
             });
 
             graphicsLayer.add(polygonGraphic);
