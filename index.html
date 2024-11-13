@@ -132,6 +132,17 @@
       });
       map.add(usaeduLayer);
 
+      // Add the new FeatureLayer for OSM NA Educational
+      const osmEduLayer = new FeatureLayer({
+        url: "https://services6.arcgis.com/Do88DoK2xjTUCXd1/arcgis/rest/services/OSM_NA_Educational/FeatureServer", // URL from AGOL Item Page
+        outFields: ["name", "type"],
+        popupTemplate: {
+          title: "Educational Facility",
+          content: "<b>Name:</b> {name}<br><b>Type:</b> {type}<br>"
+        }
+      });
+      map.add(osmEduLayer);
+
       // Query the FeatureLayer to get university features
       usaeduLayer.when(() => {
         const query = usaeduLayer.createQuery();
@@ -153,6 +164,36 @@
             });
 
             graphicsLayer.add(polygonGraphic);
+          });
+        }).catch((error) => {
+          console.error("Error querying features: ", error);
+        });
+      }).catch((error) => {
+        console.error("Error loading FeatureLayer: ", error);
+      });
+
+      // Query the new FeatureLayer to get educational facility features
+      osmEduLayer.when(() => {
+        const query = osmEduLayer.createQuery();
+        query.returnGeometry = true;
+        query.outFields = ["name", "type"];
+        
+        osmEduLayer.queryFeatures(query).then((result) => {
+          result.features.forEach((feature) => {
+            const point = {
+              type: "point",
+              longitude: feature.geometry.longitude,
+              latitude: feature.geometry.latitude
+            };
+
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: simpleMarkerSymbol,
+              attributes: feature.attributes,
+              popupTemplate: osmEduLayer.popupTemplate
+            });
+
+            graphicsLayer.add(pointGraphic);
           });
         }).catch((error) => {
           console.error("Error querying features: ", error);
