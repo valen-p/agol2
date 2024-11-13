@@ -177,6 +177,35 @@
       }).catch((error) => {
         console.error("Error loading FeatureLayer: ", error);
       });
+
+      // Query the FeatureLayer to get airport features
+      airportsLayer.when(() => {
+        const query = airportsLayer.createQuery();
+        query.returnGeometry = true;
+        query.outFields = ["NAME", "CITY", "STATE", "URL"];
+        
+        airportsLayer.queryFeatures(query).then((result) => {
+          result.features.forEach((feature) => {
+            const polygon = {
+              type: "polygon",
+              rings: feature.geometry.rings
+            };
+
+            const polygonGraphic = new Graphic({
+              geometry: polygon,
+              symbol: simpleFillSymbol,
+              attributes: feature.attributes,
+              popupTemplate: airportsLayer.popupTemplate
+            });
+
+            graphicsLayer.add(polygonGraphic);
+          });
+        }).catch((error) => {
+          console.error("Error querying features: ", error);
+        });
+      }).catch((error) => {
+        console.error("Error loading FeatureLayer: ", error);
+      });
     });
   </script>
   <!-- css to make a full screen map -->
