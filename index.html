@@ -124,13 +124,13 @@
       // Define a pop-up for usaeduLayer
       const popupEduusa = {
         title: "EDUs",
-        content: "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br>"
+        content: "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br><b>Amenity:</b> {type}<br>"
       };
 
       // Add the FeatureLayer for universities
       const usaeduLayer = new FeatureLayer({
         url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer", // URL from AGOL Item Page
-        outFields: ["NAME", "TOT_ENROLL"],
+        outFields: ["NAME", "TOT_ENROLL", "type"],
         popupTemplate: popupEduusa
       });
       map.add(usaeduLayer);
@@ -139,7 +139,7 @@
       usaeduLayer.when(() => {
         const query = usaeduLayer.createQuery();
         query.returnGeometry = true;
-        query.outFields = ["NAME", "TOT_ENROLL"];
+        query.outFields = ["NAME", "TOT_ENROLL", "type"];
         
         usaeduLayer.queryFeatures(query).then((result) => {
           result.features.forEach((feature) => {
