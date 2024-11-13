@@ -15,12 +15,13 @@
       "esri/Map",
       "esri/views/MapView",
       "esri/Graphic",
-      "esri/layers/GraphicsLayer"
-    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer) {
+      "esri/layers/GraphicsLayer",
+      "esri/layers/FeatureLayer"
+    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer) {
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurGOndvn56RaIuEG-ymH-92haus5XOWjwfQcNHTRTeMO7efrrwIO_P1WvjAaKi6OQjJ3GIY_futaMIJKN2YL-EYHTHG9Rv2I800yOHi-R0CETmNtIv1jHJiXDbTrmTiJeXLEP-6WMH6Zj1mNwmZT3z5l5nB_2nXXSVTEuDcqBFo737s7VpsbqFXNy4GrGXkfT9juBGmdeoQdWJ8oZqkquRShfozv5LIG5tRroi4bCPx5GAT1_IuAFCiIJ";
       
       const map = new Map({
-        basemap: "arcgis-imagery" // Basemap layer
+        basemap: "satellite" // Change basemap to satellite
       });
 
       const view = new MapView({
@@ -96,12 +97,14 @@
 
       graphicsLayer.add(polygonGraphic);
 
-      // Create a polyline
+      // Create a polyline with different coordinates
       const polyline = {
         type: "polyline",
         paths: [
-        [-97.751, 30.264],
-        [-97.749, 30.266],
+          [-97.751, 30.264],
+          [-97.749, 30.266],
+          [-97.747, 30.264],
+          [-97.745, 30.266]
         ]
       };
 
@@ -117,6 +120,11 @@
       });
 
       graphicsLayer.add(polylineGraphic);
+
+      const usaeduLayer = new FeatureLayer({
+        url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer" //get URL from AGOL Item Page
+      });
+      map.add(usaeduLayer);
     });
   </script>
   <!-- css to make a full screen map -->
