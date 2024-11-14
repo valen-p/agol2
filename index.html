@@ -17,12 +17,13 @@
       "esri/Graphic",
       "esri/layers/GraphicsLayer",
       "esri/layers/FeatureLayer",
-      "esri/symbols/PictureMarkerSymbol"
-    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, PictureMarkerSymbol) {
+      "esri/symbols/PictureMarkerSymbol",
+      "esri/renderers/UniqueValueRenderer"
+    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, PictureMarkerSymbol, UniqueValueRenderer) {
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurGOndvn56RaIuEG-ymH-92haus5XOWjwfQcNHTRTeMO7efrrwIO_P1WvjAaKi6OQjJ3GIY_futaMIJKN2YL-EYHTHG9Rv2I800yOHi-R0CETmNtIv1jHJiXDbTrmTiJeXLEP-6WMH6Zj1mNwmZT3z5l5nB_2nXXSVTEuDcqBFo737s7VpsbqFXNy4GrGXkfT9juBGmdeoQdWJ8oZqkquRShfozv5LIG5tRroi4bCPx5GAT1_IuAFCiIJ";
       
       const map = new Map({
-        basemap: "arcgis-topographic" // Change basemap to satellite
+        basemap: "arcgis-topographic" // Change basemap to topographic
       });
 
       const view = new MapView({
@@ -142,20 +143,34 @@
         content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>Facility Type:</b> {Fac_Type}<br>"
       };
 
-      // Add the FeatureLayer for US Airports with custom icon
+      // Define the renderer for airports
+      const airportsRenderer = new UniqueValueRenderer({
+        field: "Fac_Type",
+        defaultSymbol: {
+          type: "picture-marker",
+          url: "./local_airport_24dp_5F6368.png",
+          width: "24px",
+          height: "24px"
+        },
+        uniqueValueInfos: [
+          {
+            value: "HELIPORT",
+            symbol: {
+              type: "picture-marker",
+              url: "./helicopter.png",
+              width: "24px",
+              height: "24px"
+            }
+          }
+        ]
+      });
+
+      // Add the FeatureLayer for US Airports with custom icons
       const airportsLayer = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports9/FeatureServer", // URL from AGOL Item Page
         outFields: ["NAME", "CITY", "Fac_Type"],
         popupTemplate: popupAirports,
-        renderer: {
-          type: "simple", // autocasts as new SimpleRenderer()
-          symbol: {
-            type: "picture-marker", // autocasts as new PictureMarkerSymbol()
-            url: "local_airport_24dp_5F6368.png", // Path to your custom icon
-            width: "24px",
-            height: "24px"
-          }
-        }
+        renderer: airportsRenderer
       });
       map.add(airportsLayer);
 
