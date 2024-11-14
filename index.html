@@ -138,13 +138,13 @@
       // Define a pop-up for airports
       const popupAirports = {
         title: "Airport",
-        content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>State:</b> {STATE}<br><b>Facility Type:</b> {Fac_Type}<br><b>Website:</b> <a href='{URL}' target='_blank'>Visit Website</a>"
+        content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>Facility Type:</b> {Fac_Type}<br>"
       };
 
       // Add the FeatureLayer for US Airports with symbols
       const airportsLayer = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports9/FeatureServer", // URL from AGOL Item Page
-        outFields: ["NAME", "CITY", "STATE", "Fac_Type", "URL"],
+        outFields: ["NAME", "CITY", "Fac_Type"],
         popupTemplate: popupAirports,
         renderer: {
           type: "simple", // autocasts as new SimpleRenderer()
@@ -168,42 +168,4 @@
         query.returnGeometry = true;
         query.outFields = ["name", "type"];
         
-        osmEduLayer.queryFeatures(query).then((result) => {
-          result.features.forEach((feature) => {
-            const polygon = {
-              type: "polygon",
-              rings: feature.geometry.rings
-            };
-
-            const polygonGraphic = new Graphic({
-              geometry: polygon,
-              symbol: simpleFillSymbol,
-              attributes: feature.attributes,
-              popupTemplate: osmEduLayer.popupTemplate
-            });
-
-            graphicsLayer.add(polygonGraphic);
-          });
-        }).catch((error) => {
-          console.error("Error querying features: ", error);
-        });
-      }).catch((error) => {
-        console.error("Error loading FeatureLayer: ", error);
-      });
-    });
-  </script>
-  <!-- css to make a full screen map -->
-  <style>
-    html, body, #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <!-- the div to display the map -->
-  <div id="viewDiv"></div>
-</body>
-</html>
+        osmEduLayer.queryFeatures(query).then((result)
