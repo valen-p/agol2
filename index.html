@@ -187,6 +187,41 @@
       }).catch((error) => {
         console.error("Error loading FeatureLayer: ", error);
       });
+
+      // Query the FeatureLayer to get airport features
+      airportsLayer.when(() => {
+        const query = airportsLayer.createQuery();
+        query.returnGeometry = true;
+        query.outFields = ["NAME", "CITY", "Fac_Type"];
+        
+        airportsLayer.queryFeatures(query).then((result) => {
+          result.features.forEach((feature) => {
+            const point = {
+              type: "point",
+              longitude: feature.geometry.longitude,
+              latitude: feature.geometry.latitude
+            };
+
+            const pointGraphic = new Graphic({
+              geometry: point,
+              symbol: {
+                type: "picture-marker",
+                url: "./local_airport_24dp_5F6368.png",
+                width: "24px",
+                height: "24px"
+              },
+              attributes: feature.attributes,
+              popupTemplate: airportsLayer.popupTemplate
+            });
+
+            graphicsLayer.add(pointGraphic);
+          });
+        }).catch((error) => {
+          console.error("Error querying features: ", error);
+        });
+      }).catch((error) => {
+        console.error("Error loading FeatureLayer: ", error);
+      });
     });
   </script>
   <!-- css to make a full screen map -->
