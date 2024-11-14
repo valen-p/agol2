@@ -138,13 +138,13 @@
       // Define a pop-up for airports
       const popupAirports = {
         title: "Airport",
-        content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>State:</b> {STATE}<br><b>Website:</b> <a href='{URL}' target='_blank'>Visit Website</a>"
+        content: "<b>Name:</b> {NAME}<br><b>City:</b> {CITY}<br><b>State:</b> {STATE}<br><b>Facility Type:</b> {Fac_Type}<br><b>Website:</b> <a href='{URL}' target='_blank'>Visit Website</a>"
       };
 
       // Add the FeatureLayer for US Airports with symbols
       const airportsLayer = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports9/FeatureServer", // URL from AGOL Item Page
-        outFields: ["NAME", "CITY", "STATE", "URL"],
+        outFields: ["NAME", "CITY", "STATE", "Fac_Type", "URL"],
         popupTemplate: popupAirports,
         renderer: {
           type: "simple", // autocasts as new SimpleRenderer()
